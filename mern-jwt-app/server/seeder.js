@@ -4,22 +4,7 @@ require("dotenv").config({ path: path.resolve(__dirname, ".env") }); // Explicit
 const mongoose = require("mongoose");
 
 // FIX: Try to find Product model in 'src/models' if 'models' doesn't exist
-let Product;
-try {
-  // Try the standard path
-  Product = require("./models/Product");
-} catch (error) {
-  try {
-    // Try the src path (Common structure)
-    Product = require("./src/models/Product");
-  } catch (err) {
-    console.error(
-      "CRITICAL ERROR: Could not find Product.js in './models' OR './src/models'"
-    );
-    console.error("Please verify where your Product.js file is located.");
-    process.exit(1);
-  }
-}
+const Product = require("./src/models/Product");
 
 const products = [
   {
