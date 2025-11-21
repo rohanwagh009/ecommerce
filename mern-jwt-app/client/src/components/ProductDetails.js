@@ -9,7 +9,6 @@ const ProductDetails = () => {
   const { id } = useParams();
   const history = useHistory();
 
-  // Get authentication status for conditional rendering and routing
   const { isAuthenticated } = useContext(AuthContext);
 
   const [product, setProduct] = useState(null);
@@ -20,7 +19,7 @@ const ProductDetails = () => {
     const fetchProduct = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:5000/api/products/${id}`
+          `https://ecommerce-backend-three-chi.vercel.app/api/products/${id}`
         );
         setProduct(response.data);
         setLoading(false);
@@ -33,7 +32,6 @@ const ProductDetails = () => {
     fetchProduct();
   }, [id]);
 
-  // Logic to handle Add to Cart click
   const handleAddToCart = async () => {
     if (!isAuthenticated) {
       alert("You must be logged in to add items to the cart!");
@@ -44,11 +42,7 @@ const ProductDetails = () => {
     try {
       setAdding(true);
       await addToCart(product._id, 1);
-
-      // OPTIONAL: Redirect to cart after adding for smooth UX
-      // alert("Item added to cart successfully!");
       history.push("/cart");
-
       setAdding(false);
     } catch (error) {
       console.error("Error adding to cart:", error);
@@ -57,7 +51,6 @@ const ProductDetails = () => {
     }
   };
 
-  // NEW: Handler for View Cart button
   const handleViewCart = () => {
     history.push("/cart");
   };
@@ -78,7 +71,6 @@ const ProductDetails = () => {
 
   return (
     <div className="product-details-container">
-      {/* Left Side: Image */}
       <div className="product-image-section">
         <img
           src={product.imageUrl}
@@ -89,7 +81,6 @@ const ProductDetails = () => {
         />
       </div>
 
-      {/* Right Side: Details */}
       <div className="product-info-section">
         <h1 className="product-title">{product.name}</h1>
         <p className="product-category">Category: {product.category}</p>
@@ -100,9 +91,7 @@ const ProductDetails = () => {
           <p>{product.description}</p>
         </div>
 
-        {/* Buttons Container */}
         <div style={{ display: "flex", gap: "15px", marginTop: "20px" }}>
-          {/* Add to Cart Button */}
           <button
             className="add-to-cart-btn"
             onClick={handleAddToCart}
@@ -112,11 +101,9 @@ const ProductDetails = () => {
             {adding ? "Adding..." : "Add to Cart"}
           </button>
 
-          {/* NEW: View Cart Button */}
           <button
             className="view-cart-btn"
             onClick={handleViewCart}
-            // Simple styling to distinguish it from the primary action button
             style={{
               padding: "10px 20px",
               backgroundColor: "#3498db",
