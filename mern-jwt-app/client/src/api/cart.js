@@ -1,7 +1,7 @@
 import axios from "axios";
 
-const API_URL = "https://ecommerce-backend-three-chi.vercel.app/api/cart";
-
+const API_URL = "http://localhost:5000/api/cart";
+//"http://localhost:5000/api/cart";
 // 1. Add item to cart (POST)
 export const addToCart = async (productId, quantity) => {
   const token = localStorage.getItem("jwtToken");

@@ -2,6 +2,7 @@ import React, { useState, useContext } from "react";
 import { useHistory } from "react-router-dom";
 import { AuthContext } from "../contexts/AuthContext";
 import { registerUser } from "../api/auth";
+import "./Auth.css";
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -9,8 +10,8 @@ const Register = () => {
     email: "",
     password: "",
   });
-
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
   const { login } = useContext(AuthContext);
   const history = useHistory();
 
@@ -21,14 +22,14 @@ const Register = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
     setError("");
     try {
       const data = await registerUser(formData);
 
-      // If backend returns a token on register, login immediately
       if (data.token) {
         login(data.token);
-        history.push("/"); // Redirect to Home
+        history.push("/");
       } else {
         history.push("/login");
       }
@@ -36,102 +37,78 @@ const Register = () => {
       setError(
         err.response?.data?.message || "Registration failed. Try again."
       );
+    } finally {
+      setLoading(false);
     }
   };
 
-  // Styles object for clean code
-  const styles = {
-    container: {
-      maxWidth: "400px",
-      margin: "50px auto",
-      textAlign: "center",
-      fontFamily: "Arial, sans-serif",
-    },
-    form: {
-      display: "flex",
-      flexDirection: "column",
-      gap: "15px",
-      marginTop: "20px",
-    },
-    input: {
-      padding: "10px",
-      fontSize: "16px",
-      borderRadius: "5px",
-      border: "1px solid #ccc",
-    },
-    button: {
-      padding: "10px",
-      fontSize: "16px",
-      backgroundColor: "#007BFF", // Blue color
-      color: "white",
-      border: "none",
-      borderRadius: "5px",
-      cursor: "pointer",
-      marginTop: "10px",
-    },
-    error: {
-      color: "red",
-      backgroundColor: "#ffe6e6",
-      padding: "10px",
-      borderRadius: "5px",
-      marginBottom: "10px",
-    },
-    link: {
-      color: "#007BFF",
-      cursor: "pointer",
-      textDecoration: "underline",
-      fontWeight: "bold",
-    },
-  };
-
   return (
-    <div style={styles.container}>
-      <h2>Create an Account</h2>
+    <div className="auth-container">
+      <div className="auth-card">
+        <div className="auth-header">
+          <h1>Create Account</h1>
+          <p>Join us and start shopping</p>
+        </div>
 
-      {error && <div style={styles.error}>{error}</div>}
+        {error && (
+          <div className="error-message">
+            <span>⚠️</span> {error}
+          </div>
+        )}
 
-      <form onSubmit={handleSubmit} style={styles.form}>
-        <input
-          type="text"
-          name="username"
-          placeholder="Username"
-          value={formData.username}
-          onChange={handleChange}
-          required
-          style={styles.input}
-        />
+        <form onSubmit={handleSubmit} className="auth-form">
+          <div className="form-group">
+            <label htmlFor="username">Username</label>
+            <input
+              type="text"
+              id="username"
+              name="username"
+              placeholder="johndoe"
+              value={formData.username}
+              onChange={handleChange}
+              required
+            />
+          </div>
 
-        <input
-          type="email"
-          name="email"
-          placeholder="Email Address"
-          value={formData.email}
-          onChange={handleChange}
-          required
-          style={styles.input}
-        />
+          <div className="form-group">
+            <label htmlFor="email">Email Address</label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              placeholder="you@example.com"
+              value={formData.email}
+              onChange={handleChange}
+              required
+            />
+          </div>
 
-        <input
-          type="password"
-          name="password"
-          placeholder="Password"
-          value={formData.password}
-          onChange={handleChange}
-          required
-          style={styles.input}
-        />
+          <div className="form-group">
+            <label htmlFor="password">Password</label>
+            <input
+              type="password"
+              id="password"
+              name="password"
+              placeholder="••••••••"
+              value={formData.password}
+              onChange={handleChange}
+              required
+              minLength="6"
+            />
+          </div>
 
-        <button type="submit" style={styles.button}>
-          Register
-        </button>
-      </form>
+          <button type="submit" className="auth-btn" disabled={loading}>
+            {loading ? "Creating account..." : "Create Account"}
+          </button>
+        </form>
 
-      <p style={{ marginTop: "20px" }}>
-        Already have an account?{" "}
-        <span onClick={() => history.push("/login")} style={styles.link}>
-          Login here
-        </span>
-      </p>
+        <div className="auth-footer">
+          Already have an account?{" "}
+          <span onClick={() => history.push("/login")} className="auth-link">
+            Sign in
+          </span>
+        </div>
+      </div>
     </div>
   );
 };
