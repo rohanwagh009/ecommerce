@@ -8,12 +8,7 @@ require("dotenv").config();
 const mongoose = require("mongoose");
 
 // 2. Import app.js (Your Express Setup)
-// Ensure this points to where your app.js actually is (root or src)
 const app = require("./app");
-
-// 3. Import Routes (NEW STEP)
-// This expects a file at server/routes/products.js
-const productRoutes = require("./routes/products");
 
 // Database Connection
 const connectDB = async () => {
@@ -36,14 +31,10 @@ const connectDB = async () => {
   }
 };
 
-// 4. Connect to Database
+// 3. Connect to Database
 connectDB();
 
-// 5. Connect the Product Routes (NEW STEP)
-// This makes http://localhost:5000/api/products available
-app.use("/api/products", productRoutes);
-
-// 6. Start Server
+// 4. Start Server
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);

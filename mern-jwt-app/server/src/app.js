@@ -9,8 +9,20 @@ const cartRoutes = require("./routes/cart"); // 1. Import Cart Routes
 
 const app = express();
 
-// Middleware
-app.use(cors());
+// Middleware - UPDATED CORS Configuration
+app.use(
+  cors({
+    origin: [
+      "http://localhost:3000",
+      "http://localhost:5173", // If you're using Vite
+      process.env.CLIENT_URL || "*",
+    ],
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+  })
+);
+
 app.use(bodyParser.json());
 
 // Routes
